@@ -28,7 +28,7 @@ router.route("/login").post(loginUser)
 //secured routes
 router.route("/logout").post(verifyJWT, logoutUser)
 
-router.route("refresh-token").post(refreshAccessToken)
+router.route("/refresh-token").post(refreshAccessToken)
 
 router.route("/change-password").post(verifyJWT, changeCurrentPassword)
 
@@ -38,7 +38,7 @@ router.route("/update-account").patch(verifyJWT, updateAccountDetails)
 
 router.route("/avatar").patch(verifyJWT, upload.single("avatar"), updateUserAvatar)
 
-router.route("/coverImage").patch(verifyJWT, upload.single("/coverImage"), updateUsercoverImage)
+router.route("/coverImage").patch(verifyJWT, upload.single("coverImage"), updateUsercoverImage)
 
 router.route("/c/:username").get(verifyJWT, getUserChannelProfile)
 
