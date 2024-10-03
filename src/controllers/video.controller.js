@@ -51,7 +51,7 @@ const publishVideo = asyncHandler(async (req, res) => {
     const uploadedVideo = await Video.findById(video._id);
 
     if (!uploadedVideo) {
-        throw new ApiError(300, "Something Really went Wrong")
+        throw new ApiError(500, "Something Really went Wrong")
 
     }
 
@@ -66,16 +66,62 @@ const publishVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
 
+    try {
+        const video = await Video.findById(videoId);
+
+        if (!video) {
+            return res
+                .status(404)
+                .json(new ApiResponse(404, video, "Couldnt fetch Video"))
+        }
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, video, "Video Fetched Successfully"))
+
+    } catch (error) {
+        return res
+            .status(500)
+            .json({ message: "error While fetching the video", error: error.message })
+
+
+    }
 }
 )
 
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
+    const updateData = req.body;
 
+    const updateVideo = await findByIdAndUpdate(
+        videoId,
+        updateData,
+        { new: true }
+    )
+    if (!updateVideo) {
+        throw new ApiError(400, updateVideo, "Couldnt Update the Video")
+    }
+    return res
+        .status(200)
+        .json(new ApiResponse(200, updateVideo, "Successfully Updated the Video"))
 })
 
 const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
+
+    const deleteVideo = await findByIdAndDelete(
+        videoId
+    )
+
+    if (!deleteVideo) {
+        throw new ApiError(400, deleteVideo, "Couldnt Delete the Video")
+    }
+    return res
+        .status(200)
+        .json(new ApiResponse(200, deleteVideo, "Video Deleted Successfully"))
+
+
+
 })
 
 
